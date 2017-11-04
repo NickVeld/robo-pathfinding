@@ -1,6 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <limits>
+
 //That's the data structure for storing a single search node.
 //Although one might realize A* pathfinder relying only on g-value,
 //it's a good idea to store f- and h-values explicitly for the sake of simplicity
@@ -18,7 +20,7 @@ struct Node
     double  F, g, H; //f-, g- and h-values of the search node
     Node    *parent; //backpointer to the predecessor node (e.g. the node which g-value was used to set the g-velue of the current node)
 
-    Node(int i, int j, double H=0, Node *parent=NULL, double g=0) : i(i), j(j), H(H), parent(parent), g(g)
+    Node(int i, int j, double H=0, Node *parent=NULL, double g=std::numeric_limits<double>::max()) : i(i), j(j), H(H), parent(parent), g(g)
     {
         F=g+H;
     }

@@ -33,8 +33,8 @@ struct SearchResult
         float pathlength; //if path not found, then pathlength=0
         const std::list<Node>* lppath; //path as the sequence of adjacent nodes (see above)
         const std::list<Node>* hppath; //path as the sequence of non-adjacent nodes: "sections" (see above)
-        unsigned int nodescreated; //|OPEN| + |CLOSE| = total number of nodes saved in memory during search process.
-        unsigned int numberofsteps; //number of iterations (expansions) made by algorithm to find a solution
+        unsigned long long int nodescreated; //|OPEN| + |CLOSE| = total number of nodes saved in memory during search process.
+        unsigned long long int numberofsteps; //number of iterations (expansions) made by algorithm to find a solution
         double time; //runtime of the search algorithm (expanding nodes + reconstructing the path)
         SearchResult()
         {

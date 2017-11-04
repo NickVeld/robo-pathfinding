@@ -55,9 +55,40 @@ bool Map::CellOnGrid(int i, int j) const
     return (i < height && i >= 0 && j < width && j >= 0);
 }
 
-bool Map::CellIsAchiveable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const
+bool Map::MoveIsAvaiable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const
 {
-    return true;
+    /*
+    if (Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j)) {
+        if (from_i == i || from_j == j) {
+            return true;
+        } else {
+            if (options.allowdiagonal){
+                return ((int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j)))
+                            <= int(options.cutcorners))
+                       || int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j))
+                            == (int(options.allowsqueeze) << 1);
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+    */
+    return Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j) &&
+            (
+                from_i == i || from_j == j ||
+                    (
+                        options.allowdiagonal &&
+                            (
+                                ((int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j)))
+                                        <= int(options.cutcorners))
+                            ||
+                                (int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j))
+                                    == (int(options.allowsqueeze) << 1))
+                            )
+                    )
+            );
 }
 
 bool Map::getMap(const char *FileName)

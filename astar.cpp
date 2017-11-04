@@ -1,26 +1,18 @@
 #include "astar.h"
-#include <cmath>
-#include <ctime>
-#include <set>
 
 Astar::Astar(double HW, bool BT)
 {
     hweight = HW;
     breakingties = BT;
+    openSet = std::set<Node>();
+    closedSet = std::set<Node>();
 }
 
 SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const EnvironmentOptions &options)
 {
-    bool pathfound;
-    float pathlength;
-    std::list<Node> lppath;
-    std::list<Node> hppath;
-    unsigned int nodescreated; //|OPEN| + |CLOSE| = total number of nodes saved in memory during search process.
-    unsigned int numberofsteps; //number of iterations (expansions) made by algorithm to find a solution
+    unsigned long long int numberofsteps = 0; //number of iterations (expansions) made by algorithm to find a solution
 
     const clock_t begin_time = std::clock();
-
-    std::set<Node> closedSet = std::set<Node>();
 
     /*
     int s_i = map.get_start_i();
@@ -29,18 +21,19 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
     int g_i = map.get_goal_i();
     int g_j = map.get_goal_j();
     Node start = Node(map.get_start_i(), map.get_start_j()
-            , computeHFromCellToCell(map.get_start_i(), map.get_start_j(), g_i, g_j, options));
+            , hweight * computeHFromCellToCell(map.get_start_i(), map.get_start_j(), g_i, g_j, options));
     Node goal = Node(g_i, g_j, 0);
 
     // The set of currently discovered nodes that are not evaluated yet.
     // Initially, only the start node is known.
-    std::set<Node> openSet = std::set<Node>();
     openSet.insert(start);
 
     Node current = start;
     Node neighbor = start;
-    bool isobstacle1 = false, isobstacle2 =false;
+    std::list<Node> neighbors;
+    double tentative_gScore = 0;
     while (!openSet.empty()) {
+        numberofsteps++;
         current = *openSet.begin();
         if (current == goal) {
             break;
@@ -49,27 +42,24 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         openSet.erase(openSet.begin());
         closedSet.insert(current);
 
-        //for each neighbor of current if neighbor in closedSet
-        //    continue;        // Ignore the neighbor which is already evaluated.
-
-        for (int k = 0; k < 9; ++k) {
-
+       neighbors = findSuccessors(current, map, options);
+        for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
+            neighbor = *it;
             openSet.insert(neighbor);
 
-            // The distance from start to a neighbor
-            tentative_gScore := gScore[current] + dist_between(current, neighbor)
-            if tentative_gScore >= gScore[neighbor]
-            continue        // This is not a better path.
+            tentative_gScore = current.g
+                               + computeHFromCellToCell(current.i, current.j, neighbor.i, neighbor.j, options);
+            if (tentative_gScore >= neighbor.g)
+                continue;        // This is not a better path.
 
-            // This path is the best until now. Record it!
-            cameFrom[neighbor] := current
-                    gScore[neighbor] : = tentative_gScore
-            fScore[neighbor] := gScore[neighbor] + heuristic_cost_estimate(neighbor, goal)
+            neighbor.set_g_and_parent(tentative_gScore, &current);
         }
     }
     if (sresult.pathfound = (current == goal)) {
+        std::list<Node> lppath = makePrimaryPath(current);
+        std::list<Node> hppath = makeSecondaryPath(current);
+        sresult.lppath = &lppath; //Ошибка!
         sresult.hppath = &hppath; //Here is a constant pointer
-        sresult.lppath = &lppath;
     }
     sresult.nodescreated = openSet.size() + closedSet.size();
     sresult.numberofsteps = numberofsteps;
@@ -97,4 +87,23 @@ double Astar::computeHFromCellToCell(int i1, int j1, int i2, int j2, const Envir
         return D * (di + dj) + (D2 - 2 * D) * ((di < dj) ? di : dj);
     }
     return 0;
+}
+
+std::list<Node> Astar::findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options)
+{
+
+}
+
+std::list<Node> Astar::makePrimaryPath(Node curNode)
+{
+    std::list<Node> path;
+    //need to implement
+    return path;
+}
+
+std::list<Node> Astar::makeSecondaryPath(Node curNode)
+{
+    std::list<Node> path;
+    //need to implement
+    return path;
 }

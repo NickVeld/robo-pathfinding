@@ -22,19 +22,25 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
     return sresult;
 }
 
-/*std::list<Node> ISearch::findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options)
+/*
+std::list<Node> ISearch::findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options)
 {
     std::list<Node> successors;
     //need to implement
     return successors;
-}*/
+}
+*/
 
-/*void ISearch::makePrimaryPath(Node curNode)
+std::list<Node> ISearch::makePrimaryPath(Node curNode)
 {
+    std::list<Node> path;
     //need to implement
-}*/
+    return path;
+}
 
-/*void ISearch::makeSecondaryPath()
+std::list<Node> ISearch::makeSecondaryPath(Node curNode)
 {
+    std::list<Node> path;
     //need to implement
-}*/
+    return path;
+}

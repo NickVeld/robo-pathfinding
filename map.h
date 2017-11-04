@@ -36,7 +36,7 @@ class Map
         bool CellIsTraversable (int i, int j) const;
         bool CellOnGrid (int i, int j) const;
         bool CellIsObstacle(int i, int j) const;
-        bool CellIsAchiveable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const;
+        bool MoveIsAvaiable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const;
         int  getValue(int i, int j) const;
         int getMapHeight() const;
         int getMapWidth() const;
