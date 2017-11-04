@@ -12,6 +12,7 @@
 #include "dijkstra.h"
 #include "theta.h"
 #include "xmllogger.h"
+//#include "mission.cpp"
 
 //That's the wrap up class that first creates all the needed objects (Map, Search etc.)
 //and then runs the search and then cleans everything up.

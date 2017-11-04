@@ -14,7 +14,7 @@ class ISearch
     public:
         ISearch();
         ~ISearch(void);
-        SearchResult startSearch(ILogger *Logger, const Map &Map, const EnvironmentOptions &options);
+        virtual SearchResult startSearch(ILogger *Logger, const Map &Map, const EnvironmentOptions &options);
 
     protected:
         //CODE HERE

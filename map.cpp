@@ -22,6 +22,24 @@ Map::~Map()
     }
 }
 
+int Map::get_start_i() const
+{
+    return start_i;
+}
+
+int Map::get_start_j() const
+{
+    return start_j;
+}
+int Map::get_goal_i() const
+{
+    return goal_i;
+}
+int Map::get_goal_j() const
+{
+    return goal_j;
+}
+
 bool Map::CellIsTraversable(int i, int j) const
 {
     return (Grid[i][j] == CN_GC_NOOBS);
@@ -35,6 +53,11 @@ bool Map::CellIsObstacle(int i, int j) const
 bool Map::CellOnGrid(int i, int j) const
 {
     return (i < height && i >= 0 && j < width && j >= 0);
+}
+
+bool Map::CellIsAchiveable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const
+{
+    return true;
 }
 
 bool Map::getMap(const char *FileName)
@@ -52,6 +75,7 @@ bool Map::getMap(const char *FileName)
 
     // Load XML File
     if (doc.LoadFile(FileName) != tinyxml2::XMLError::XML_SUCCESS) {
+        std::cout << doc.LoadFile(FileName) << std::endl;
         std::cout << "Error opening XML file!" << std::endl;
         return false;
     }

@@ -2,14 +2,20 @@
 
 int main(int argc, char* argv[])
 {
+    char * path;
     if(argc < 2) {
-        std::cout<<"Error! Pathfinding task file (XML) is not specified!"<<std::endl;
-        return 0;
+        //char pathstr[46] = "C:\\Users\\sasho\\CLionProjects\\robo\\example.xml";
+        char pathstr[12] = "example.xml";
+        path = pathstr;
+        //std::cout << "Error! Pathfinding task file (XML) is not specified!"<<std::endl;
+        //return 0;
+    } else {
+        path = argv[1];
     }
 
-    Mission mission(argv[1]);
+    Mission mission(path);
 
-    std::cout<<argv[1]<<std::endl;
+    std::cout<<path<<std::endl;
     std::cout<<"Parsing the map from XML:"<<std::endl;
 
     if(!mission.getMap()) {
@@ -23,7 +29,7 @@ int main(int argc, char* argv[])
             std::cout<<"Configurations OK!"<<std::endl<<"Creating log channel:"<<std::endl;
 
             if(!mission.createLog())
-                std::cout<<"Log chanel has not been created! Program halted!"<<std::endl;
+                std::cout<<"Log channel has not been created! Program halted!"<<std::endl;
             else {
                 std::cout<<"Log OK!"<<std::endl<<"Start searching the path:"<<std::endl;
 

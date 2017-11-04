@@ -18,8 +18,31 @@ struct Node
     double  F, g, H; //f-, g- and h-values of the search node
     Node    *parent; //backpointer to the predecessor node (e.g. the node which g-value was used to set the g-velue of the current node)
 
+    Node(int i, int j, double H=0, Node *parent=NULL, double g=0) : i(i), j(j), H(H), parent(parent), g(g)
+    {
+        F=g+H;
+    }
+
+    double set_g_and_parent(double g, Node *parent=NULL) {
+        F=g+H;
+        return F;
+    }
+
+    double setH(double H) {
+        F=g+H;
+        return F;
+    }
+
     bool operator== (const Node &other) const {
         return i == other.i && j == other.j;
+    }
+
+    bool operator< (const Node &other) const {
+        return F < other.F;
+    }
+
+    bool operator> (const Node &other) const {
+        return F > other.F;
     }
 };
 #endif
