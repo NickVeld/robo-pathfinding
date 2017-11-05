@@ -31,16 +31,16 @@ std::list<Node> ISearch::findSuccessors(Node curNode, const Map &map, const Envi
 }
 */
 
-std::list<Node> ISearch::makePrimaryPath(Node curNode)
+std::list<Node>* ISearch::makePrimaryPath(Node curNode)
 {
-    std::list<Node> path;
+    std::list<Node>* path;
     //need to implement
     return path;
 }
 
-std::list<Node> ISearch::makeSecondaryPath(Node curNode)
+std::list<Node>* ISearch::makeSecondaryPath(Node curNode)
 {
-    std::list<Node> path;
+    std::list<Node>* path;
     //need to implement
     return path;
 }

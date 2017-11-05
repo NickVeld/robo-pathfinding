@@ -14,7 +14,7 @@ Node Theta::resetParent(Node current, Node parent, const Map &map, const Environ
     //need to implement
     return current;
 }
-
+/*
 std::list<Node> Theta::makeSecondaryPath(Node curNode)
 {
     //need to implement
@@ -24,3 +24,4 @@ std::list<Node> Theta::makePrimaryPath(Node curNode)
 {
     //need to implement
 }
+*/

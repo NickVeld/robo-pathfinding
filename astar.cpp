@@ -58,13 +58,17 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         }
     }
     if ((sresult.pathfound = (current == goal)) || true) {
-        std::list<Node> lppath = makePrimaryPath(current);
+        //std::list<Node> lppath = makePrimaryPath(current);
         //std::list<Node> hppath = makeSecondaryPath(current);
         //sresult.lppath = &lppath; //Ошибка!
+        //sresult.hppath = &hppath; //Here is a constant pointer
+
         //Что это такое???
         //5. Implement A* with 2k neighbors (up to 32).
         //6. Implement A* with heading turns.
-        //sresult.hppath = &hppath; //Here is a constant pointer
+
+        sresult.lppath = makePrimaryPath(current);
+        sresult.hppath = makeSecondaryPath(current);
     }
     sresult.pathlength = current.g;
     sresult.nodescreated = openSet.size() + closedSet.size();
@@ -130,20 +134,20 @@ std::list<Node> Astar::findSuccessors(Node curNode, const Map &map, const Enviro
     return ss;
 }
 
-std::list<Node> Astar::makePrimaryPath(Node curNode)
+std::list<Node>* Astar::makePrimaryPath(Node curNode)
 {
-    std::list<Node> path;
+    std::list<Node>* path = new std::list<Node>();
     const Node * tmp = &curNode;
     do {
-        path.push_front(*tmp);
+        path->push_front(*tmp);
     }
     while ((tmp = tmp->parent) != NULL);
     return path;
 }
 
-std::list<Node> Astar::makeSecondaryPath(Node curNode)
+std::list<Node>* Astar::makeSecondaryPath(Node curNode)
 {
-    std::list<Node> path;
+    std::list<Node>* path = new std::list<Node>();
     //need to implement
     return path;
 }

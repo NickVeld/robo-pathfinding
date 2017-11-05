@@ -57,6 +57,7 @@ bool Map::CellOnGrid(int i, int j) const
 
 bool Map::MoveIsAvaiable(int i, int j, int from_i, int from_j, const EnvironmentOptions &options) const
 {
+    //Version for independent cutcorners and allowsqueeze
     /*
     if (Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j)) {
         if (from_i == i || from_j == j) {
@@ -75,6 +76,7 @@ bool Map::MoveIsAvaiable(int i, int j, int from_i, int from_j, const Environment
         return false;
     }
     */
+    /*
     return Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j) &&
             (
                 from_i == i || from_j == j ||
@@ -85,10 +87,42 @@ bool Map::MoveIsAvaiable(int i, int j, int from_i, int from_j, const Environment
                                         <= int(options.cutcorners))
                             ||
                                 (int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j))
-                                    == (int(options.allowsqueeze) << 1))
+                                        == (int(options.allowsqueeze) << 1))
                             )
                     )
             );
+    */
+    //Version for dependent cutcorners and allowsqueeze
+    /*
+    if (Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j)) {
+        if (from_i == i || from_j == j) {
+            return true;
+        } else {
+            if (options.allowdiagonal){
+                return int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j))
+                                        <= int(options.cutcorners) + int(options.allowsqueeze);
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+    */
+
+    return Map::CellOnGrid(i, j) && Map::CellIsTraversable(i, j) &&
+            (
+                from_i == i || from_j == j ||
+                    (
+                        options.allowdiagonal &&
+                            (
+                                int(Map::CellIsObstacle(from_i, j)) + int(Map::CellIsObstacle(i, from_j))
+                                        <= int(options.cutcorners) + int(options.allowsqueeze)
+                            )
+                    )
+            )
+        ;
+
 }
 
 bool Map::getMap(const char *FileName)
