@@ -5,7 +5,7 @@ Astar::Astar(double HW, bool BT)
     hweight = HW;
     breakingties = BT;
     openSet = std::set<Node>();
-    closedSet = std::set<Node>();
+    closedSet = std::unordered_map<unsigned long long int, Node>();
 }
 
 SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const EnvironmentOptions &options)
@@ -20,6 +20,8 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
      */
     g_i = map.get_goal_i();
     g_j = map.get_goal_j();
+    map_shift = map.getMapWidth();
+
     Node start = Node(map.get_start_i(), map.get_start_j()
             , hweight * computeHFromCellToCell(map.get_start_i(), map.get_start_j(), g_i, g_j, options),
             0, NULL);
@@ -40,7 +42,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         }
 
         openSet.erase(openSet.begin());
-        closedSet.insert(current);
+        closedSet.insert({map_shift * current.i + current.j, current});
 
        neighbors = findSuccessors(current, map, options);
         for (Node neighbor : neighbors) {
@@ -48,22 +50,23 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
             tentative_gScore = current.g
                                + computeHFromCellToCell(current.i, current.j, neighbor.i, neighbor.j, options);
             if (tentative_gScore < neighbor.g) {
-                neighbor.set_g_and_parent(tentative_gScore, &(*(closedSet.find(current))));
+                neighbor.set_g_and_parent(tentative_gScore
+                        , &((*(closedSet.find(map_shift * current.i + current.j))).second));
                 openSet.erase(neighbor);
             }
             openSet.insert(neighbor);
         }
     }
-    std::list<Node> lppath = makePrimaryPath(current);
-    if (sresult.pathfound = (current == goal)) {
-
-        std::list<Node> hppath = makeSecondaryPath(current);
-        sresult.lppath = &lppath; //Ошибка!
+    if ((sresult.pathfound = (current == goal)) || true) {
+        std::list<Node> lppath = makePrimaryPath(current);
+        //std::list<Node> hppath = makeSecondaryPath(current);
+        //sresult.lppath = &lppath; //Ошибка!
         //Что это такое???
         //5. Implement A* with 2k neighbors (up to 32).
         //6. Implement A* with heading turns.
-        sresult.hppath = &hppath; //Here is a constant pointer
+        //sresult.hppath = &hppath; //Here is a constant pointer
     }
+    sresult.pathlength = current.g;
     sresult.nodescreated = openSet.size() + closedSet.size();
     sresult.numberofsteps = numberofsteps;
     sresult.time = double(std::clock() - begin_time) /  CLOCKS_PER_SEC;
@@ -97,9 +100,16 @@ void Astar::pushNextSuccessor(Node curNode, const Map &map, const EnvironmentOpt
 {
     Node tmp = curNode;
     if (map.MoveIsAvaiable(i, j, curNode.i, curNode.j, options)) {
-        tmp = Node(i, j
-                , computeHFromCellToCell(i, j, g_i, g_j, options));
-        if (closedSet.find(tmp) == closedSet.end()) {
+        /*if (i == 11 && j == 8) {
+            std::cout << closedSet.size() << std::endl << (closedSet.find(tmp) == closedSet.end()) << std::endl;
+            closedSet.insert(tmp);
+            std::cout << closedSet.size() << std::endl;
+            closedSet.erase(tmp);
+            std::cout << closedSet.size() << std::endl << std::endl;
+        }*/
+        if (!closedSet.count(map_shift * i + j)) {
+            tmp = Node(i, j
+                    , computeHFromCellToCell(i, j, g_i, g_j, options));
             ss.push_back(tmp);
         }
     }

@@ -48,7 +48,7 @@ struct Node
     }
 
     bool operator< (const Node &other) const {
-        if (*this == other) {
+        if (i == other.i && j == other.j) {
             return false;
         }
         return ((F == other.F)

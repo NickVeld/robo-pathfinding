@@ -4,6 +4,7 @@
 #include <cmath>
 #include <ctime>
 #include <set>
+#include <unordered_map>
 
 //A* search.
 class Astar : public ISearch
@@ -19,8 +20,9 @@ class Astar : public ISearch
     virtual std::list<Node> makePrimaryPath(Node curNode);//Makes path using back pointers
     virtual std::list<Node> makeSecondaryPath(Node curNode);//Makes another type of path(sections or points)
     std::set<Node> openSet;
-    std::set<Node> closedSet;
+    std::unordered_map<unsigned long long int, Node> closedSet;
     int g_i = -1, g_j = -1;
+    unsigned long long int map_shift;
 };
 
 #endif
