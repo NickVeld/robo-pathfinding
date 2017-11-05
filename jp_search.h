@@ -10,8 +10,8 @@ public:
 
 private:
     std::list<Node> findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options);
-    void makePrimaryPath(Node curNode);
-    void makeSecondaryPath();
+    std::list<Node> makePrimaryPath(Node curNode);
+    std::list<Node> makeSecondaryPath(Node curNode);
 };
 
 #endif // JP_SEARCH_H

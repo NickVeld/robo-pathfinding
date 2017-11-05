@@ -18,10 +18,11 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
     int s_i = map.get_start_i();
     int s_j = map.get_start_j();
      */
-    int g_i = map.get_goal_i();
-    int g_j = map.get_goal_j();
+    g_i = map.get_goal_i();
+    g_j = map.get_goal_j();
     Node start = Node(map.get_start_i(), map.get_start_j()
-            , hweight * computeHFromCellToCell(map.get_start_i(), map.get_start_j(), g_i, g_j, options));
+            , hweight * computeHFromCellToCell(map.get_start_i(), map.get_start_j(), g_i, g_j, options),
+            0, NULL);
     Node goal = Node(g_i, g_j, 0);
 
     // The set of currently discovered nodes that are not evaluated yet.
@@ -29,7 +30,6 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
     openSet.insert(start);
 
     Node current = start;
-    Node neighbor = start;
     std::list<Node> neighbors;
     double tentative_gScore = 0;
     while (!openSet.empty()) {
@@ -43,22 +43,25 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         closedSet.insert(current);
 
        neighbors = findSuccessors(current, map, options);
-        for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
-            neighbor = *it;
-            openSet.insert(neighbor);
+        for (Node neighbor : neighbors) {
 
             tentative_gScore = current.g
                                + computeHFromCellToCell(current.i, current.j, neighbor.i, neighbor.j, options);
-            if (tentative_gScore >= neighbor.g)
-                continue;        // This is not a better path.
-
-            neighbor.set_g_and_parent(tentative_gScore, &current);
+            if (tentative_gScore < neighbor.g) {
+                neighbor.set_g_and_parent(tentative_gScore, &(*(closedSet.find(current))));
+                openSet.erase(neighbor);
+            }
+            openSet.insert(neighbor);
         }
     }
+    std::list<Node> lppath = makePrimaryPath(current);
     if (sresult.pathfound = (current == goal)) {
-        std::list<Node> lppath = makePrimaryPath(current);
+
         std::list<Node> hppath = makeSecondaryPath(current);
         sresult.lppath = &lppath; //Ошибка!
+        //Что это такое???
+        //5. Implement A* with 2k neighbors (up to 32).
+        //6. Implement A* with heading turns.
         sresult.hppath = &hppath; //Here is a constant pointer
     }
     sresult.nodescreated = openSet.size() + closedSet.size();
@@ -89,15 +92,42 @@ double Astar::computeHFromCellToCell(int i1, int j1, int i2, int j2, const Envir
     return 0;
 }
 
-std::list<Node> Astar::findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options)
+void Astar::pushNextSuccessor(Node curNode, const Map &map, const EnvironmentOptions &options
+                                , int i, int j, std::list<Node> &ss)
 {
+    Node tmp = curNode;
+    if (map.MoveIsAvaiable(i, j, curNode.i, curNode.j, options)) {
+        tmp = Node(i, j
+                , computeHFromCellToCell(i, j, g_i, g_j, options));
+        if (closedSet.find(tmp) == closedSet.end()) {
+            ss.push_back(tmp);
+        }
+    }
+}
 
+std::list<Node> Astar::findSuccessors(Node curNode, const Map &map, const EnvironmentOptions &options) {
+    std::list<Node> ss;
+    pushNextSuccessor(curNode, map, options, curNode.i + 1, curNode.j, ss);
+    pushNextSuccessor(curNode, map, options, curNode.i, curNode.j + 1, ss);
+    pushNextSuccessor(curNode, map, options, curNode.i - 1, curNode.j, ss);
+    pushNextSuccessor(curNode, map, options, curNode.i, curNode.j - 1, ss);
+    if(options.allowdiagonal) {
+        pushNextSuccessor(curNode, map, options, curNode.i + 1, curNode.j - 1, ss);
+        pushNextSuccessor(curNode, map, options, curNode.i + 1, curNode.j + 1, ss);
+        pushNextSuccessor(curNode, map, options, curNode.i - 1, curNode.j + 1, ss);
+        pushNextSuccessor(curNode, map, options, curNode.i - 1, curNode.j - 1, ss);
+    }
+    return ss;
 }
 
 std::list<Node> Astar::makePrimaryPath(Node curNode)
 {
     std::list<Node> path;
-    //need to implement
+    const Node * tmp = &curNode;
+    do {
+        path.push_front(*tmp);
+    }
+    while ((tmp = tmp->parent) != NULL);
     return path;
 }
 

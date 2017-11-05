@@ -11,12 +11,12 @@ std::list<Node> JP_Search::findSuccessors(Node curNode, const Map &map, const En
     return successors;
 }
 
-void JP_Search::makePrimaryPath(Node curNode)
+std::list<Node> JP_Search::makePrimaryPath(Node curNode)
 {
     //need to implement
 }
 
-void JP_Search::makeSecondaryPath()
+std::list<Node> JP_Search::makeSecondaryPath(Node curNode)
 {
     //need to implement
 }
