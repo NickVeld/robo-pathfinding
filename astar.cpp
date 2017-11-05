@@ -113,7 +113,7 @@ void Astar::pushNextSuccessor(Node curNode, const Map &map, const EnvironmentOpt
         }*/
         if (!closedSet.count(map_shift * i + j)) {
             tmp = Node(i, j
-                    , computeHFromCellToCell(i, j, g_i, g_j, options));
+                    , hweight * computeHFromCellToCell(i, j, g_i, g_j, options));
             ss.push_back(tmp);
         }
     }
