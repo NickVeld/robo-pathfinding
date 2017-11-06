@@ -48,6 +48,7 @@ struct Node
     }
 
     bool operator< (const Node &other) const {
+        /*
         if (i == other.i && j == other.j) {
             return false;
         }
@@ -56,6 +57,8 @@ struct Node
                    ? ((i == other.i) ? (j < other.j) : (i < other.i))
                    : (H < other.H))
                 : (F < other.F));
+         */
+        return (i == other.i) ? (j < other.j) : (i < other.i);
     }
 };
 #endif
