@@ -98,6 +98,8 @@ void Mission::saveSearchResultsToLog()
         logger->writeToLogPath(*sr.lppath);
         logger->writeToLogHPpath(*sr.hppath);
         logger->writeToLogMap(map, *sr.lppath);
+        delete(sr.hppath);
+        delete(sr.lppath);
     } else
         logger->writeToLogNotFound();
     logger->saveLog();
