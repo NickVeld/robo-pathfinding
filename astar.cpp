@@ -68,7 +68,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         //6. Implement A* with heading turns.
 
         sresult.lppath = makePrimaryPath(current);
-        //sresult.hppath = makeSecondaryPath(current);
+        sresult.hppath = makeSecondaryPath(current);
     }
     sresult.pathlength = current.g;
     sresult.nodescreated = openSet.size() + closedSet.size();
@@ -136,7 +136,7 @@ std::list<Node> Astar::findSuccessors(Node curNode, const Map &map, const Enviro
 
 std::list<Node> Astar::makePrimaryPath(Node curNode)
 {
-    std::list<Node> path;// = new std::list<Node>();
+    std::list<Node> path;
     const Node * tmp = &curNode;
     do {
         path.push_front(*tmp);
@@ -144,11 +144,10 @@ std::list<Node> Astar::makePrimaryPath(Node curNode)
     while ((tmp = tmp->parent) != NULL);
     return path;
 }
-/*
-std::list<Node>* Astar::makeSecondaryPath(Node curNode)
+
+std::list<Node> Astar::makeSecondaryPath(Node curNode)
 {
-    std::list<Node>* path = new std::list<Node>();
+    std::list<Node> path;
     //need to implement
     return path;
 }
-*/
