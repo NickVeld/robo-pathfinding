@@ -31,7 +31,7 @@ struct SearchResult
 {
         bool pathfound;
         float pathlength; //if path not found, then pathlength=0
-        const std::list<Node>* lppath; //path as the sequence of adjacent nodes (see above)
+        std::list<Node> lppath; //path as the sequence of adjacent nodes (see above)
         const std::list<Node>* hppath; //path as the sequence of non-adjacent nodes: "sections" (see above)
         unsigned long long int nodescreated; //|OPEN| + |CLOSE| = total number of nodes saved in memory during search process.
         unsigned long long int numberofsteps; //number of iterations (expansions) made by algorithm to find a solution
@@ -40,7 +40,7 @@ struct SearchResult
         {
             pathfound = false;
             pathlength = 0;
-            lppath = nullptr;
+            //lppath = nullptr;
             hppath = nullptr;
             nodescreated = 0;
             numberofsteps = 0;
