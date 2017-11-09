@@ -78,7 +78,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         //5. Implement A* with 2k neighbors (up to 32).
         //6. Implement A* with heading turns.
 
-        sresult.lppath = makePrimaryPath(*current);
+        sresult.lppath = makePrimaryPath(*current, map, options);
         sresult.hppath = makeSecondaryPath(*current);
     }
     sresult.pathlength = current->g;
@@ -153,7 +153,7 @@ std::list<Node*> Astar::findSuccessors(Node *curNode, const Map &map, const Envi
     return ss;
 }
 
-std::list<Node>* Astar::makePrimaryPath(Node curNode)
+std::list<Node>* Astar::makePrimaryPath(Node curNode, const Map &map, const EnvironmentOptions &options)
 {
     auto path = new std::list<Node>();
     Node * tmp = &curNode;
