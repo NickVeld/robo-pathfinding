@@ -18,7 +18,8 @@ class Astar : public ISearch
                                     , int i, int j, std::list<Node*> &ss);
     virtual std::list<Node*> findSuccessors(Node *curNode, const Map &map, const EnvironmentOptions &options);
 
-    virtual bool lineOfSight(int i1, int j1, int i2, int j2, const Map &map, bool cutcorners) {return false;}
+    virtual bool lineOfSight(int i1, int j1, int i2, int j2, const Map &map, const EnvironmentOptions &options)
+    {return false;}
 
     virtual std::list<Node>* makePrimaryPath(Node curNode);//Makes path using back pointers
     virtual std::list<Node>* makeSecondaryPath(Node curNode);//Makes another type of path(sections or points)
