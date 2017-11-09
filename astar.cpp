@@ -152,13 +152,22 @@ std::list<Node>* Astar::makePrimaryPath(Node curNode)
     do {
         path->push_front(*tmp);
     }
-    while ((tmp = tmp->parent) != NULL);
+    while ((tmp = tmp->parent) != nullptr);
     return path;
 }
 
 std::list<Node>* Astar::makeSecondaryPath(Node curNode)
 {
+    unsigned long long int lastaction = 0;
     std::list<Node>* path = new std::list<Node>();
-    //need to implement
+    const Node * tmp = &curNode;
+    while (tmp->parent != nullptr) {
+        if ((tmp->parent->i - tmp->i) * map_shift + tmp->parent->j - tmp->j != lastaction) {
+            lastaction = (tmp->parent->i - tmp->i) * map_shift + tmp->parent->j - tmp->j;
+            path->push_front(*tmp);
+        }
+        tmp = tmp->parent;
+    }
+    path->push_front(*tmp);
     return path;
 }
