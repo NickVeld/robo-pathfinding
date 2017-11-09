@@ -50,13 +50,16 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
 
        neighbors = findSuccessors(current, map, options);
         for (Node * neighbor : neighbors) {
-
+            if (current->parent != nullptr && lineOfSight(current->parent->i, current->parent->j, neighbor->i, neighbor->j, map, options.cutcorners)) {
+                current = current->parent;
+            }
             tentative_gScore = current->g
                                + computeHFromCellToCell(current->i, current->j, neighbor->i, neighbor->j, options);
             if (tentative_gScore < neighbor->g) {
-                neighbor->set_g_and_parent(tentative_gScore
-                        , (*(closedSet.find(map_shift * current->i + current->j))).second);
+                neighbor->set_g_and_parent(tentative_gScore,
+                                           (*(closedSet.find(map_shift * current->i + current->j))).second);
             }
+
             openSet.insert({neighbor->F, neighbor});
         }
     }

@@ -18,7 +18,7 @@ struct Node
 {
     int     i, j; //grid cell coordinates
     double  F, g, H; //f-, g- and h-values of the search node
-    const Node    *parent; //backpointer to the predecessor node (e.g. the node which g-value was used to set the g-velue of the current node)
+    Node    *parent; //backpointer to the predecessor node (e.g. the node which g-value was used to set the g-velue of the current node)
 
     Node(int i, int j, double H=0, double g=std::numeric_limits<double>::max(), Node *parent=NULL)
             : i(i), j(j), H(H), parent(parent), g(g)
@@ -26,7 +26,7 @@ struct Node
         F=g+H;
     }
 
-    double set_g_and_parent(double g, const Node *parent=NULL) {
+    double set_g_and_parent(double g, Node *parent=NULL) {
         this->g = g;
         this->parent = parent;
         F=g+H;
