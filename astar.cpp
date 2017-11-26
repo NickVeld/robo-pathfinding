@@ -50,12 +50,20 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
 
        neighbors = findSuccessors(current, map, options);
         for (Node * neighbor : neighbors) {
-
-            tentative_gScore = current->g
-                               + computeHFromCellToCell(current->i, current->j, neighbor->i, neighbor->j, options);
-            if (tentative_gScore < neighbor->g) {
-                neighbor->set_g_and_parent(tentative_gScore
-                        , (*(closedSet.find(map_shift * current->i + current->j))).second);
+            if (current->parent != nullptr && lineOfSight(current->parent->i, current->parent->j
+                                                            , neighbor->i, neighbor->j, map, options)) {
+                tentative_gScore = current->parent->g
+                                   + computeHFromCellToCell(current->parent->i, current->parent->j
+                                                            , neighbor->i, neighbor->j, options);
+                if (tentative_gScore < neighbor->g) {
+                    neighbor->set_g_and_parent(tentative_gScore, current->parent);
+                }
+            } else {
+                tentative_gScore = current->g
+                                   + computeHFromCellToCell(current->i, current->j, neighbor->i, neighbor->j, options);
+                if (tentative_gScore < neighbor->g) {
+                    neighbor->set_g_and_parent(tentative_gScore, current);
+                }
             }
             openSet.insert({breakingties ? neighbor->g : -neighbor->g, neighbor});
         }
@@ -70,7 +78,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
         //5. Implement A* with 2k neighbors (up to 32).
         //6. Implement A* with heading turns.
 
-        sresult.lppath = makePrimaryPath(*current);
+        sresult.lppath = makePrimaryPath(*current, map, options);
         sresult.hppath = makeSecondaryPath(*current);
     }
     sresult.pathlength = current->g;
@@ -145,10 +153,10 @@ std::list<Node*> Astar::findSuccessors(Node *curNode, const Map &map, const Envi
     return ss;
 }
 
-std::list<Node>* Astar::makePrimaryPath(Node curNode)
+std::list<Node>* Astar::makePrimaryPath(Node curNode, const Map &map, const EnvironmentOptions &options)
 {
-    std::list<Node>* path = new std::list<Node>();
-    const Node * tmp = &curNode;
+    auto path = new std::list<Node>();
+    Node * tmp = &curNode;
     do {
         path->push_front(*tmp);
     }
@@ -159,8 +167,8 @@ std::list<Node>* Astar::makePrimaryPath(Node curNode)
 std::list<Node>* Astar::makeSecondaryPath(Node curNode)
 {
     unsigned long long int lastaction = 0;
-    std::list<Node>* path = new std::list<Node>();
-    const Node * tmp = &curNode;
+    auto path = new std::list<Node>();
+    Node * tmp = &curNode;
     while (tmp->parent != nullptr) {
         if ((tmp->parent->i - tmp->i) * map_shift + tmp->parent->j - tmp->j != lastaction) {
             lastaction = (tmp->parent->i - tmp->i) * map_shift + tmp->parent->j - tmp->j;

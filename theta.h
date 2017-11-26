@@ -9,10 +9,13 @@ class Theta: public Astar
         ~Theta(void);
 
     private:
-        bool lineOfSight(int i1, int j1, int i2, int j2, const Map &map, bool cutcorners);
+        bool lineOfSight(int i1, int j1, int i2, int j2, const Map &map, const EnvironmentOptions &options );
         Node resetParent(Node current, Node parent, const Map &map, const EnvironmentOptions &options);
-        //std::list<Node> makePrimaryPath(Node curNode);
-        //std::list<Node> makeSecondaryPath(Node curNode);
+
+        void getLineOfSight(Node * to, const Map &map, const EnvironmentOptions &options, std::list<Node>* path);
+
+        virtual std::list<Node>* makePrimaryPath(Node curNode, const Map &map, const EnvironmentOptions &options);//Makes path using back pointers
+        virtual std::list<Node>* makeSecondaryPath(Node curNode);//Makes another type of path(sections or points)
 
 };
 

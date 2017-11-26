@@ -37,7 +37,7 @@
         </grid>
     </map>
     <algorithm>
-        <searchtype>astar</searchtype>
+        <searchtype>theta</searchtype>
         <metrictype>diagonal</metrictype>
         <breakingties>g-max</breakingties>
         <hweight>1</hweight>
