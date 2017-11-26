@@ -33,7 +33,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
     created.push_back(start);
     Node *lastcreated = &created.back();
     pcreated.insert({map_shift * start.i + start.j, lastcreated});
-    openSet.insert(std::pair<double, Node *>(start.F, lastcreated));
+    openSet.insert(std::pair<double, Node *>(breakingties ? start.g : -start.g, lastcreated));
 
     Node *current;
     std::list<Node*> neighbors;
@@ -65,7 +65,7 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
                     neighbor->set_g_and_parent(tentative_gScore, current);
                 }
             }
-            openSet.insert({neighbor->F, neighbor});
+            openSet.insert({breakingties ? neighbor->g : -neighbor->g, neighbor});
         }
     }
     if ((sresult.pathfound = (*current == goal)) || true) {
@@ -131,7 +131,7 @@ void Astar::pushNextSuccessor(Node *curNode, const Map &map, const EnvironmentOp
                 created.emplace_back(Node(i, j, hweight * computeHFromCellToCell(i, j, g_i, g_j, options)));
                 tmp = &created.back();
                 pcreated.insert({map_shift * i + j, tmp});
-                openSet.insert(std::pair<double, Node *>(tmp->F, tmp));
+                openSet.insert(std::pair<double, Node *>(breakingties ? tmp->g : -tmp->g, tmp));
             }
             ss.push_back(tmp);
         }
