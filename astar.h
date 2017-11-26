@@ -36,7 +36,6 @@ class Astar : public ISearch
         virtual std::list<Node>* makePrimaryPath(Node curNode, const Map &map, const EnvironmentOptions &options);//Makes path using back pointers
         virtual std::list<Node>* makeSecondaryPath(Node curNode);//Makes another type of path(sections or points)
 
-        std::set<std::pair<double, Node*>> openSet;
         std::set<std::pair<double, Node*>, GTie> openSet;
         std::unordered_map<unsigned long long int, Node*> closedSet;
         std::list<Node> created;
