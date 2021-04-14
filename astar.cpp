@@ -4,8 +4,8 @@ Astar::Astar(double HW, bool BT)
 {
     hweight = HW;
     breakingties = BT;
-    //openSet = std::set<std::pair<double, Node*>>();
-    //closedSet = std::unordered_map<unsigned long long int, Node*>();
+    // openSet = std::set<std::pair<double, Node*>>();
+    // closedSet = std::unordered_map<unsigned long long int, Node*>();
 }
 
 SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const EnvironmentOptions &options)
@@ -68,19 +68,8 @@ SearchResult Astar::startSearch(ILogger *Logger, const Map &map, const Environme
             openSet.insert({breakingties ? neighbor->g : -neighbor->g, neighbor});
         }
     }
-    if ((sresult.pathfound = (*current == goal)) || true) {
-        //std::list<Node> lppath = makePrimaryPath(current);
-        //std::list<Node> hppath = makeSecondaryPath(current);
-        //sresult.lppath = &lppath; //Ошибка!
-        //sresult.hppath = &hppath; //Here is a constant pointer
-
-        //Что это такое???
-        //5. Implement A* with 2k neighbors (up to 32).
-        //6. Implement A* with heading turns.
-
-        sresult.lppath = makePrimaryPath(*current, map, options);
-        sresult.hppath = makeSecondaryPath(*current);
-    }
+    sresult.lppath = makePrimaryPath(*current, map, options);
+    sresult.hppath = makeSecondaryPath(*current);
     sresult.pathlength = current->g;
     sresult.nodescreated = openSet.size() + closedSet.size();
     sresult.numberofsteps = numberofsteps;
@@ -102,8 +91,8 @@ double Astar::computeHFromCellToCell(int i1, int j1, int i2, int j2, const Envir
         return (di < dj) ? dj : di;
     }
     if (options.metrictype == CN_SP_MT_DIAG) {
-        unsigned int D = 1; // weight of up, down, left, right movement
-        unsigned int D2 = 1; // weight of diagonal movement
+        unsigned int D = 1;  // weight of up, down, left, right movement
+        unsigned int D2 = 1;  // weight of diagonal movement
         //if D == D2, Diagonal distance equivalent to Chebyshev distance
         return D * (di + dj) + (D2 - 2 * D) * ((di < dj) ? di : dj);
     }
@@ -116,13 +105,6 @@ void Astar::pushNextSuccessor(Node *curNode, const Map &map, const EnvironmentOp
     Node * tmp = nullptr;
 
     if (map.MoveIsAvaiable(i, j, curNode->i, curNode->j, options)) {
-        /*if (i == 11 && j == 8) {
-            std::cout << closedSet.size() << std::endl << (closedSet.find(tmp) == closedSet.end()) << std::endl;
-            closedSet.insert(tmp);
-            std::cout << closedSet.size() << std::endl;
-            closedSet.erase(tmp);
-            std::cout << closedSet.size() << std::endl << std::endl;
-        }*/
         if (!closedSet.count(map_shift * i + j)) {
             if (pcreated.count(map_shift * i + j)) {
                 tmp = (*pcreated.find(map_shift * i + j)).second;

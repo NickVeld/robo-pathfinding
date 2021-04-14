@@ -247,7 +247,6 @@ bool Config::getConfig(const char *FileName)
             stream >> value;
             stream.str("");
             stream.clear();
-            //std::transform(value.begin(), value.end(), value.begin(), ::tolower);
             if (value == CN_LP_LEVEL_NOPE_WORD || value == CN_LP_LEVEL_NOPE_VALUE)
                 LogParams[CN_LP_LEVEL] = CN_LP_LEVEL_NOPE_WORD;
             else if (value == CN_LP_LEVEL_TINY_WORD || value == CN_LP_LEVEL_TINY_VALUE)

@@ -4,7 +4,6 @@ int main(int argc, char* argv[])
 {
     char * path;
     if(argc < 2) {
-        //char pathstr[46] = "C:\\Users\\sasho\\CLionProjects\\robo\\example.xml";
         char pathstr[12] = "example.xml";
         path = pathstr;
         //std::cout << "Error! Pathfinding task file (XML) is not specified!"<<std::endl;
